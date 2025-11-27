@@ -32,8 +32,8 @@ readonly class CarCheckClient
         LoggerInterface                                       $logger
     ) {
         $this->client = new XRoadSoapClient(
-            $location,
             $wsdl,
+            $location,
             $serviceSubSystem,
             $serviceCode,
             $memberCode,

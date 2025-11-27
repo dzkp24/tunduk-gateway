@@ -30,8 +30,8 @@ readonly class PersonalAccountClient
     )
     {
         $this->client = new XRoadSoapClient(
-            $location,
             $wsdl,
+            $location,
             $serviceSubSystem,
             $serviceCode,
             $memberCode,

@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Soap;
 
 use App\Domain\Interfaces\SoapClientInterface;
-use Exception;
 use Psr\Log\LoggerInterface;
+use Exception;
 use SoapClient;
 use SoapFault;
 
@@ -25,7 +25,6 @@ class XRoadSoapClient implements SoapClientInterface
         private readonly XRoadHeaderFactory $headers,
         private readonly LoggerInterface    $logger,
     ) {
-        $this->logger->debug('start');
         $this->client = new SoapClient($wsdl, [
             'location' => $this->location,
             'trace' => true,
@@ -37,9 +36,6 @@ class XRoadSoapClient implements SoapClientInterface
                 ]
             ]),
         ]);
-        dd($wsdl, $this->location, $this->serviceSubSystem, $this->serviceCode, $this->memberCode, $this->serviceVersion);
-
-        $this->logger->debug('end');
     }
 
     /**
