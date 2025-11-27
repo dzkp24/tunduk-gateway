@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use SoapFault;
+use Throwable;
 
 #[Route('/api/soc-fund')]
 class PensionController extends AbstractController
@@ -17,24 +17,28 @@ class PensionController extends AbstractController
         private readonly PensionClient $client,
     ) {}
 
-    /**
-     * @throws SoapFault
-     */
     #[Route('/pension-info', methods: ['POST'])]
     public function GetPensionInfoWithSum(#[MapRequestPayload] SocFundInfoRequest $request): JsonResponse
     {
-        $response = $this->client->GetPensionInfoWithSum($request);
+        try {
+            $response = $this->client->GetPensionInfoWithSum($request);
 
-        if ($response->isSuccess()) {
+            if ($response->isSuccess()) {
+                return $this->json([
+                    'success' => false,
+                    'data' => null,
+                ]);
+            }
+
+            return $this->json([
+                'success' => true,
+                'data' => $response,
+            ]);
+        } catch (Throwable $e) {
             return $this->json([
                 'success' => false,
-                'data' => null,
+                'message' => $e->getMessage(),
             ]);
         }
-
-        return $this->json([
-            'success' => true,
-            'data' => $response,
-        ]);
     }
 }

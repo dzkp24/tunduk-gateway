@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use SoapFault;
 use Throwable;
 
 #[Route('/api/carcheck')]
@@ -21,25 +20,30 @@ class CarCheckController extends AbstractController
         private readonly CarCheckPaidHandler     $paidHandler,
     ) {}
 
-    /**
-     * @throws SoapFault
-     */
     #[Route('/free', methods: ['POST'])]
     public function free(#[MapRequestPayload] CarCheckRequest $request): JsonResponse
     {
-        $response = $this->client->carCheckFree($request);
+        try {
+            $response = $this->client->carCheckFree($request);
 
-        if ($response->isFound()) {
+            if ($response->isFound()) {
+                return $this->json([
+                    'success' => false,
+                    'data' => null,
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return $this->json([
+                'success' => true,
+                'data' => $response,
+            ]);
+        }
+        catch (Throwable $e) {
             return $this->json([
                 'success' => false,
-                'data' => null,
-            ], Response::HTTP_NOT_FOUND);
+                'message' => $e->getMessage(),
+            ]);
         }
-
-        return $this->json([
-            'success' => true,
-            'data' => $response,
-        ]);
     }
 
     #[Route('/paid', methods: ['POST'])]
@@ -52,11 +56,10 @@ class CarCheckController extends AbstractController
                 'success' => true,
                 'data' => $response,
             ]);
-        }
-        catch (Throwable $exception) {
+        } catch (Throwable $e) {
             return $this->json([
                 'success' => false,
-                'message' => $exception->getMessage(),
+                'message' => $e->getMessage(),
             ]);
         }
     }

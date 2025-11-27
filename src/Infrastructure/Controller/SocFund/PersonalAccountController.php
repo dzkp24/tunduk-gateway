@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use SoapFault;
+use Throwable;
 
 #[Route('/api/soc-fund')]
 class PersonalAccountController extends AbstractController
@@ -17,24 +17,28 @@ class PersonalAccountController extends AbstractController
         private readonly PersonalAccountClient $client,
     ) {}
 
-    /**
-     * @throws SoapFault
-     */
     #[Route('/work-periods-with-sum', methods: ['POST'])]
     public function GetWorkPeriodInfoWithSum(#[MapRequestPayload] SocFundInfoRequest $request): JsonResponse
     {
-        $response = $this->client->GetWorkPeriodInfoWithSum($request);
+        try {
+            $response = $this->client->GetWorkPeriodInfoWithSum($request);
 
-        if (!$response->state) {
+            if (!$response->state) {
+                return $this->json([
+                    'success' => false,
+                    'data' => null,
+                ]);
+            }
+
+            return $this->json([
+                'success' => true,
+                'data' => $response,
+            ]);
+        } catch (Throwable $e) {
             return $this->json([
                 'success' => false,
-                'data' => null,
+                'message' => $e->getMessage(),
             ]);
         }
-
-        return $this->json([
-            'success' => true,
-            'data' => $response,
-        ]);
     }
 }
