@@ -6,6 +6,7 @@ use App\Domain\DTO\SocFund\Response\DossierInfo;
 use App\Domain\DTO\SocFund\Response\PensionInfoResponse;
 use App\Domain\DTO\SocFund\Response\PinInfo;
 use App\Domain\DTO\SocFund\SocFundInfoRequest;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use App\Infrastructure\Soap\XRoadHeaderFactory;
 use App\Infrastructure\Soap\XRoadSoapClient;
@@ -19,13 +20,14 @@ readonly class PensionClient
      * @throws SoapFault
      */
     public function __construct(
-        #[Autowire('%env(TUNDUK_LOCATION)%')] string          $location,
+        #[Autowire('%env(TUNDUK_LOCATION)%')] string         $location,
         #[Autowire('%env(PENSION_WSDL)%')] string            $wsdl,
         #[Autowire('%env(PENSION_SERVICE_CODE)%')] string    $serviceCode,
         #[Autowire('%env(PENSION_SUBSYSTEM_CODE)%')] string  $serviceSubSystem,
         #[Autowire('%env(PENSION_MEMBER_CODE)%')] string     $memberCode,
         #[Autowire('%env(PENSION_SERVICE_VERSION)%')] string $serviceVersion,
-        XRoadHeaderFactory                                    $headers,
+        XRoadHeaderFactory                                   $headers,
+        LoggerInterface                                      $logger
     ) {
         $this->client = new XRoadSoapClient(
             $location,
@@ -35,6 +37,7 @@ readonly class PensionClient
             $memberCode,
             $serviceVersion,
             $headers,
+            $logger,
         );
     }
 

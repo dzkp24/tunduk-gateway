@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Soap\Clients;
 
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use App\Domain\DTO\CarCheck\Request\CarCheckRequest;
 use App\Domain\DTO\CarCheck\Response\CarCheckHistory;
@@ -28,6 +29,7 @@ readonly class CarCheckClient
         #[Autowire('%env(CARCHECK_MEMBER_CODE)%')] string     $memberCode,
         #[Autowire('%env(CARCHECK_SERVICE_VERSION)%')] string $serviceVersion,
         XRoadHeaderFactory                                    $headers,
+        LoggerInterface                                       $logger
     ) {
         $this->client = new XRoadSoapClient(
             $location,
@@ -37,6 +39,7 @@ readonly class CarCheckClient
             $memberCode,
             $serviceVersion,
             $headers,
+            $logger,
         );
     }
 

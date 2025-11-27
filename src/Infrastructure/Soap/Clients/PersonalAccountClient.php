@@ -7,6 +7,7 @@ use App\Domain\DTO\SocFund\WorkPeriodWithSumItem;
 use App\Domain\DTO\SocFund\WorkPeriodWithSumResponse;
 use App\Infrastructure\Soap\XRoadHeaderFactory;
 use App\Infrastructure\Soap\XRoadSoapClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use SoapFault;
 
@@ -25,7 +26,9 @@ readonly class PersonalAccountClient
         #[Autowire('%env(PERSONAL_ACCOUNT_MEMBER_CODE)%')] string     $memberCode,
         #[Autowire('%env(PERSONAL_ACCOUNT_SERVICE_VERSION)%')] string $serviceVersion,
         XRoadHeaderFactory                                            $headers,
-    ) {
+        LoggerInterface                                               $logger,
+    )
+    {
         $this->client = new XRoadSoapClient(
             $location,
             $wsdl,
@@ -34,6 +37,7 @@ readonly class PersonalAccountClient
             $memberCode,
             $serviceVersion,
             $headers,
+            $logger,
         );
     }
 
