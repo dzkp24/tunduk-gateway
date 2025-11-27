@@ -31,6 +31,11 @@ class XRoadSoapClient implements SoapClientInterface
             'trace' => true,
             'exception' => true,
             'cache_wsdl' => WSDL_CACHE_NONE,
+            'stream_context' => stream_context_create([
+                'http' => [
+                    'timeout' => 5
+                ]
+            ]),
         ]);
         dd($wsdl, $this->location, $this->serviceSubSystem, $this->serviceCode, $this->memberCode, $this->serviceVersion);
 
