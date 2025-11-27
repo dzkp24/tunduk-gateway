@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="PersonalAccountService"
+                  targetNamespace="http://tunduk-sf.x-road.fi/producer"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tunduk-sf.x-road.fi/producer"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+                  xmlns:id="http://x-road.eu/xsd/identifiers" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://tunduk-sf.x-road.fi/producer">
+            <xs:element name="GetRestManagerFunds" type="tns:RestManagerFundsRequest"/>
+            <xs:complexType name="RestManagerFundsRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Mf" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="TimePosition" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetRestManagerFundsResponse" type="tns:RestManagerFunds"/>
+            <xs:complexType name="RestManagerFunds">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Status" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SummBase" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SummPercent" type="xs:decimal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetAccountData" type="tns:AccountDataRequest"/>
+            <xs:complexType name="AccountDataRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="DateBegin" nillable="true" type="xs:dateTime"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="DateEnd" nillable="true" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetAccountDataResponse" type="tns:PersonalAccountData"/>
+            <xs:complexType name="PersonalAccountData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Patronymic" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Street" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="House" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Flat" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="ActuarialCoefficient" type="xs:decimal"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="TotalStanding" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="AccountRecords" type="tns:ArrayOfAccountRecord"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="CauseOfError" type="tns:ServiceErrors"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ArrayOfAccountRecord">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="AccountRecord" nillable="true"
+                                type="tns:AccountRecord"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="AccountRecord">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RUSF" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Payer" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PayerUid" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="INN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="OKPO" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="NumSF" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="DateBegin" type="xs:dateTime"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="DateEnd" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Category" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Activity" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Privilege" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Voluntary" type="xs:boolean"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="HighlandRate" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Standing" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Income" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Percent" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="PensionFundSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="PFUnitedPart" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="PensionFundPaymentSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="MedicineFundSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SalaryFull" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Salary" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="AddSalary" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SumEmpr" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SumEmpe" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SavingFundSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SFUnitedPart" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SavingFundPaymentSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="IndexationCoefficient" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SP2" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Month" type="xs:unsignedByte"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Year" type="xs:short"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="PerEmpr" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="PreEmpe" type="xs:decimal"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Tariff" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Rate" type="xs:long"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="LSS" type="xs:long"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="FOMS" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="FOZD" type="xs:decimal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="ServiceErrors">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="OK"/>
+                    <xs:enumeration value="PIN_INCORRECT"/>
+                    <xs:enumeration value="PIN_NOTFOUND"/>
+                    <xs:enumeration value="MK_WRONG"/>
+                    <xs:enumeration value="INTERNAL_ERROR"/>
+                    <xs:enumeration value="ACTUARIAL_COEF_NOTFOUND"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="GetAccountDataWithoutLog" type="tns:AccountDataRequestWithoutLog"/>
+            <xs:complexType name="AccountDataRequestWithoutLog">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="DateBegin" nillable="true" type="xs:dateTime"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="DateEnd" nillable="true" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetAccountDataWithoutLogResponse" type="tns:PersonalAccountDataWithoutLog"/>
+            <xs:complexType name="PersonalAccountDataWithoutLog">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Patronymic" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="ZIPCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Street" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="House" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Flat" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="ActuarialCoefficient" type="xs:decimal"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="TotalStanding" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="AccountRecords" type="tns:ArrayOfAccountRecord"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="CauseOfError" type="tns:ServiceErrors"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetSumNPF" type="tns:SumNPFRequest"/>
+            <xs:complexType name="SumNPFRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Pin" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="CurrentDate" nillable="true" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetSumNPFResponse" type="tns:SumNPFData"/>
+            <xs:complexType name="SumNPFData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="PaymentsSFSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="InvestIncomeSum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SumSF" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="SumNPF" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="CauseOfError" type="tns:ServiceErrors"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetWorkPeriodInfo" type="tns:WorkPeriodInfoRequest"/>
+            <xs:complexType name="WorkPeriodInfoRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetWorkPeriodInfoResponse" type="tns:WorkPeriodInfo"/>
+            <xs:complexType name="WorkPeriodInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Patronymic" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Issuer" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="WorkPeriods" type="tns:ArrayOfWorkPeriod"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ArrayOfWorkPeriod">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="WorkPeriod" nillable="true"
+                                type="tns:WorkPeriod"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="WorkPeriod">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN_LSS" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Payer" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="INN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="NumSF" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateBegin" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateEnd" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetWorkPeriodInfoWithSum" type="tns:WorkPeriodInfoWithSumRequest"/>
+            <xs:complexType name="WorkPeriodInfoWithSumRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetWorkPeriodInfoWithSumResponse" type="tns:WorkPeriodInfoWithSum"/>
+            <xs:complexType name="WorkPeriodInfoWithSum">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Patronymic" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Issuer" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="WorkPeriods" type="tns:ArrayOfWorkPeriodWithSum"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ArrayOfWorkPeriodWithSum">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="WorkPeriodWithSum" nillable="true"
+                                type="tns:WorkPeriodWithSum"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="WorkPeriodWithSum">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN_LSS" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Payer" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="INN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="NumSF" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateBegin" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateEnd" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Salary" type="xs:decimal"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetLastPeriodFOMS" type="tns:LastPeriodFOMSRequest"/>
+            <xs:complexType name="LastPeriodFOMSRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetLastPeriodFOMSResponse" type="tns:LastPeriodFOMS"/>
+            <xs:complexType name="LastPeriodFOMS">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="State" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Patronymic" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Payer" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="INN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="NumSF" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateBegin" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateEnd" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Issuer" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://x-road.eu/xsd/xroad.xsd"
+                   elementFormDefault="qualified" targetNamespace="http://x-road.eu/xsd/xroad.xsd">
+            <xs:import namespace="http://x-road.eu/xsd/identifiers"/>
+            <xs:element xmlns:q1="http://x-road.eu/xsd/identifiers" name="client" type="q1:XRoadClientIdentifierType"/>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="issue" type="xs:string"/>
+            <xs:element name="protocolVersion" type="xs:string"/>
+            <xs:element xmlns:q2="http://x-road.eu/xsd/identifiers" name="service"
+                        type="q2:XRoadServiceIdentifierType"/>
+            <xs:element name="userId" type="xs:string"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://x-road.eu/xsd/identifiers"
+                   elementFormDefault="qualified" targetNamespace="http://x-road.eu/xsd/identifiers">
+            <xs:complexType name="XRoadClientIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadIdentifierType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="xRoadInstance" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="memberClass" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="memberCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="subsystemCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="groupCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="serviceCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="serviceVersion" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="securityCategoryCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="serverCode" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute form="qualified" name="objectType" type="tns:XRoadObjectType" use="required"/>
+            </xs:complexType>
+            <xs:simpleType name="XRoadObjectType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MEMBER"/>
+                    <xs:enumeration value="SUBSYSTEM"/>
+                    <xs:enumeration value="SERVER"/>
+                    <xs:enumeration value="GLOBALGROUP"/>
+                    <xs:enumeration value="LOCALGROUP"/>
+                    <xs:enumeration value="SECURITYCATEGORY"/>
+                    <xs:enumeration value="SERVICE"/>
+                    <xs:enumeration value="CENTRALSERVICE"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="XRoadServiceIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadSecurityCategoryIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadCentralServiceIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadSecurityServerIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadGlobalGroupIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadLocalGroupIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="XRoadRequestOf_RestManagerFundsRequest">
+        <wsdl:part name="GetRestManagerFunds" element="tns:GetRestManagerFunds"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_RestManagerFundsRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_RestManagerFunds">
+        <wsdl:part name="GetRestManagerFundsResponse" element="tns:GetRestManagerFundsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_RestManagerFunds_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_AccountDataRequest">
+        <wsdl:part name="GetAccountData" element="tns:GetAccountData"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_AccountDataRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PersonalAccountData">
+        <wsdl:part name="GetAccountDataResponse" element="tns:GetAccountDataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PersonalAccountData_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_AccountDataRequestWithoutLog">
+        <wsdl:part name="GetAccountDataWithoutLog" element="tns:GetAccountDataWithoutLog"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_AccountDataRequestWithoutLog_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PersonalAccountDataWithoutLog">
+        <wsdl:part name="GetAccountDataWithoutLogResponse" element="tns:GetAccountDataWithoutLogResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PersonalAccountDataWithoutLog_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_SumNPFRequest">
+        <wsdl:part name="GetSumNPF" element="tns:GetSumNPF"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_SumNPFRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_SumNPFData">
+        <wsdl:part name="GetSumNPFResponse" element="tns:GetSumNPFResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_SumNPFData_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_WorkPeriodInfoRequest">
+        <wsdl:part name="GetWorkPeriodInfo" element="tns:GetWorkPeriodInfo"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_WorkPeriodInfoRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_WorkPeriodInfo">
+        <wsdl:part name="GetWorkPeriodInfoResponse" element="tns:GetWorkPeriodInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_WorkPeriodInfo_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_WorkPeriodInfoWithSumRequest">
+        <wsdl:part name="GetWorkPeriodInfoWithSum" element="tns:GetWorkPeriodInfoWithSum"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_WorkPeriodInfoWithSum">
+        <wsdl:part name="GetWorkPeriodInfoWithSumResponse" element="tns:GetWorkPeriodInfoWithSumResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_WorkPeriodInfoWithSum_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_LastPeriodFOMSRequest">
+        <wsdl:part name="GetLastPeriodFOMS" element="tns:GetLastPeriodFOMS"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_LastPeriodFOMSRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_LastPeriodFOMS">
+        <wsdl:part name="GetLastPeriodFOMSResponse" element="tns:GetLastPeriodFOMSResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_LastPeriodFOMS_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:portType name="PersonalAccountService">
+        <wsdl:operation name="GetRestManagerFunds">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetRestManagerFunds"
+                        name="XRoadRequestOf_RestManagerFundsRequest"
+                        message="tns:XRoadRequestOf_RestManagerFundsRequest"/>
+            <wsdl:output
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetRestManagerFundsResponse"
+                name="XRoadResponseOf_RestManagerFunds" message="tns:XRoadResponseOf_RestManagerFunds"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAccountData">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetAccountData"
+                        name="XRoadRequestOf_AccountDataRequest" message="tns:XRoadRequestOf_AccountDataRequest"/>
+            <wsdl:output wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetAccountDataResponse"
+                         name="XRoadResponseOf_PersonalAccountData" message="tns:XRoadResponseOf_PersonalAccountData"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAccountDataWithoutLog">
+            <wsdl:input
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetAccountDataWithoutLog"
+                name="XRoadRequestOf_AccountDataRequestWithoutLog"
+                message="tns:XRoadRequestOf_AccountDataRequestWithoutLog"/>
+            <wsdl:output
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetAccountDataWithoutLogResponse"
+                name="XRoadResponseOf_PersonalAccountDataWithoutLog"
+                message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetSumNPF">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetSumNPF"
+                        name="XRoadRequestOf_SumNPFRequest" message="tns:XRoadRequestOf_SumNPFRequest"/>
+            <wsdl:output wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetSumNPFResponse"
+                         name="XRoadResponseOf_SumNPFData" message="tns:XRoadResponseOf_SumNPFData"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetWorkPeriodInfo">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetWorkPeriodInfo"
+                        name="XRoadRequestOf_WorkPeriodInfoRequest" message="tns:XRoadRequestOf_WorkPeriodInfoRequest"/>
+            <wsdl:output
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetWorkPeriodInfoResponse"
+                name="XRoadResponseOf_WorkPeriodInfo" message="tns:XRoadResponseOf_WorkPeriodInfo"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetWorkPeriodInfoWithSum">
+            <wsdl:input
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetWorkPeriodInfoWithSum"
+                name="XRoadRequestOf_WorkPeriodInfoWithSumRequest"
+                message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest"/>
+            <wsdl:output
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetWorkPeriodInfoWithSumResponse"
+                name="XRoadResponseOf_WorkPeriodInfoWithSum" message="tns:XRoadResponseOf_WorkPeriodInfoWithSum"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetLastPeriodFOMS">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetLastPeriodFOMS"
+                        name="XRoadRequestOf_LastPeriodFOMSRequest" message="tns:XRoadRequestOf_LastPeriodFOMSRequest"/>
+            <wsdl:output
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetLastPeriodFOMSResponse"
+                name="XRoadResponseOf_LastPeriodFOMS" message="tns:XRoadResponseOf_LastPeriodFOMS"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_PersonalAccountService" type="tns:PersonalAccountService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetRestManagerFunds">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetRestManagerFunds"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_RestManagerFundsRequest">
+                <soap:header message="tns:XRoadRequestOf_RestManagerFundsRequest_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_RestManagerFundsRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_RestManagerFundsRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_RestManagerFundsRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_RestManagerFundsRequest_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_RestManagerFundsRequest_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_RestManagerFunds">
+                <soap:header message="tns:XRoadResponseOf_RestManagerFunds_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_RestManagerFunds_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_RestManagerFunds_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_RestManagerFunds_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_RestManagerFunds_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_RestManagerFunds_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAccountData">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetAccountData"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_AccountDataRequest">
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequest_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequest_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequest_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_PersonalAccountData">
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountData_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountData_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountData_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountData_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountData_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountData_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAccountDataWithoutLog">
+            <soap:operation
+                soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetAccountDataWithoutLog"
+                style="document"/>
+            <wsdl:input name="XRoadRequestOf_AccountDataRequestWithoutLog">
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequestWithoutLog_Headers" part="client"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequestWithoutLog_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequestWithoutLog_Headers" part="issue"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequestWithoutLog_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequestWithoutLog_Headers" part="service"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_AccountDataRequestWithoutLog_Headers" part="userId"
+                             use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_PersonalAccountDataWithoutLog">
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog_Headers" part="client"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog_Headers" part="id"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog_Headers" part="issue"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog_Headers" part="service"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PersonalAccountDataWithoutLog_Headers" part="userId"
+                             use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSumNPF">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetSumNPF"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_SumNPFRequest">
+                <soap:header message="tns:XRoadRequestOf_SumNPFRequest_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_SumNPFRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_SumNPFRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_SumNPFRequest_Headers" part="protocolVersion" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_SumNPFRequest_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_SumNPFRequest_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_SumNPFData">
+                <soap:header message="tns:XRoadResponseOf_SumNPFData_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_SumNPFData_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_SumNPFData_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_SumNPFData_Headers" part="protocolVersion" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_SumNPFData_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_SumNPFData_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetWorkPeriodInfo">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetWorkPeriodInfo"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_WorkPeriodInfoRequest">
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoRequest_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoRequest_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoRequest_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_WorkPeriodInfo">
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfo_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfo_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfo_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfo_Headers" part="protocolVersion" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfo_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfo_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetWorkPeriodInfoWithSum">
+            <soap:operation
+                soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetWorkPeriodInfoWithSum"
+                style="document"/>
+            <wsdl:input name="XRoadRequestOf_WorkPeriodInfoWithSumRequest">
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers" part="client"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers" part="issue"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers" part="service"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_WorkPeriodInfoWithSumRequest_Headers" part="userId"
+                             use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_WorkPeriodInfoWithSum">
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfoWithSum_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfoWithSum_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfoWithSum_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfoWithSum_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfoWithSum_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_WorkPeriodInfoWithSum_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetLastPeriodFOMS">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PersonalAccountService/GetLastPeriodFOMS"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_LastPeriodFOMSRequest">
+                <soap:header message="tns:XRoadRequestOf_LastPeriodFOMSRequest_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_LastPeriodFOMSRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_LastPeriodFOMSRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_LastPeriodFOMSRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_LastPeriodFOMSRequest_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_LastPeriodFOMSRequest_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_LastPeriodFOMS">
+                <soap:header message="tns:XRoadResponseOf_LastPeriodFOMS_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_LastPeriodFOMS_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_LastPeriodFOMS_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_LastPeriodFOMS_Headers" part="protocolVersion" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_LastPeriodFOMS_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_LastPeriodFOMS_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PersonalAccountService">
+        <wsdl:port name="BasicHttpBinding_PersonalAccountService" binding="tns:BasicHttpBinding_PersonalAccountService">
+            <soap:address location="http://example.org/xroad-endpoint"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

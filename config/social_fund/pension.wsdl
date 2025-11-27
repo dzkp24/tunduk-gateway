@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="PensionInfoService"
+                  targetNamespace="http://tunduk-sf.x-road.fi/producer"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tunduk-sf.x-road.fi/producer"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+                  xmlns:id="http://x-road.eu/xsd/identifiers" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                   targetNamespace="http://tunduk-sf.x-road.fi/producer">
+            <xs:element name="GetPensionInfo" type="tns:PensionInfoRequest"/>
+            <xs:complexType name="PensionInfoRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetPensionInfoResponse" type="tns:PensionInfo"/>
+            <xs:complexType name="PensionInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="1" maxOccurs="1" name="CauseOfError" type="tns:ServiceErrors"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PINInfoes" type="tns:ArrayOfPINInfo"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DossierInfoes" type="tns:ArrayOfDossierInfo"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="ServiceErrors">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="OK"/>
+                    <xs:enumeration value="BAD_REQUEST"/>
+                    <xs:enumeration value="INTERNAL_ERROR"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="ArrayOfPINInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="PINInfo" nillable="true" type="tns:PINInfo"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="PINInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Date" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="State" type="xs:int"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="LastName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="FullName" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="Issuer" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ArrayOfDossierInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="DossierInfo" nillable="true"
+                                type="tns:DossierInfo"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DossierInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RUSF" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="NumDossier" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PINPensioner" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PINRecipient" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateFromInitial" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateTo" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="KindOfPension" type="xs:int"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="CategoryPension" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN1" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN2" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetPensionInfoWithSum" type="tns:PensionInfoWithSumRequest"/>
+            <xs:complexType name="PensionInfoWithSumRequest">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestOrg" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RequestPerson" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="GetPensionInfoWithSumResponse" type="tns:PensionInfoWithSum"/>
+            <xs:complexType name="PensionInfoWithSum">
+                <xs:sequence>
+                    <xs:element minOccurs="1" maxOccurs="1" name="CauseOfError" type="tns:ServiceErrors"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PINInfoes" type="tns:ArrayOfPINInfo"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DossierInfoes" type="tns:ArrayOfDossierInfoWithSum"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ArrayOfDossierInfoWithSum">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="DossierInfoWithSum" nillable="true"
+                                type="tns:DossierInfoWithSum"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DossierInfoWithSum">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="RUSF" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="NumDossier" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PINPensioner" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PINRecipient" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateFromInitial" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="DateTo" type="xs:string"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="Sum" type="xs:decimal"/>
+                    <xs:element minOccurs="1" maxOccurs="1" name="KindOfPension" type="xs:int"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="CategoryPension" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN1" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="PIN2" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://x-road.eu/xsd/xroad.xsd"
+                   elementFormDefault="qualified" targetNamespace="http://x-road.eu/xsd/xroad.xsd">
+            <xs:import namespace="http://x-road.eu/xsd/identifiers"/>
+            <xs:element xmlns:q1="http://x-road.eu/xsd/identifiers" name="client" type="q1:XRoadClientIdentifierType"/>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="issue" type="xs:string"/>
+            <xs:element name="protocolVersion" type="xs:string"/>
+            <xs:element xmlns:q2="http://x-road.eu/xsd/identifiers" name="service"
+                        type="q2:XRoadServiceIdentifierType"/>
+            <xs:element name="userId" type="xs:string"/>
+        </xs:schema>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://x-road.eu/xsd/identifiers"
+                   elementFormDefault="qualified" targetNamespace="http://x-road.eu/xsd/identifiers">
+            <xs:complexType name="XRoadClientIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadIdentifierType">
+                <xs:sequence>
+                    <xs:element minOccurs="0" maxOccurs="1" name="xRoadInstance" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="memberClass" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="memberCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="subsystemCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="groupCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="serviceCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="serviceVersion" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="securityCategoryCode" type="xs:string"/>
+                    <xs:element minOccurs="0" maxOccurs="1" name="serverCode" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute form="qualified" name="objectType" type="tns:XRoadObjectType" use="required"/>
+            </xs:complexType>
+            <xs:simpleType name="XRoadObjectType">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MEMBER"/>
+                    <xs:enumeration value="SUBSYSTEM"/>
+                    <xs:enumeration value="SERVER"/>
+                    <xs:enumeration value="GLOBALGROUP"/>
+                    <xs:enumeration value="LOCALGROUP"/>
+                    <xs:enumeration value="SECURITYCATEGORY"/>
+                    <xs:enumeration value="SERVICE"/>
+                    <xs:enumeration value="CENTRALSERVICE"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:complexType name="XRoadServiceIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadSecurityCategoryIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadCentralServiceIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadSecurityServerIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadGlobalGroupIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="XRoadLocalGroupIdentifierType">
+                <xs:complexContent mixed="false">
+                    <xs:extension base="tns:XRoadIdentifierType"/>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="XRoadRequestOf_PensionInfoRequest">
+        <wsdl:part name="GetPensionInfo" element="tns:GetPensionInfo"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_PensionInfoRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PensionInfo">
+        <wsdl:part name="GetPensionInfoResponse" element="tns:GetPensionInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PensionInfo_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_PensionInfoWithSumRequest">
+        <wsdl:part name="GetPensionInfoWithSum" element="tns:GetPensionInfoWithSum"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadRequestOf_PensionInfoWithSumRequest_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PensionInfoWithSum">
+        <wsdl:part name="GetPensionInfoWithSumResponse" element="tns:GetPensionInfoWithSumResponse"/>
+    </wsdl:message>
+    <wsdl:message name="XRoadResponseOf_PensionInfoWithSum_Headers">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+    </wsdl:message>
+    <wsdl:portType name="PensionInfoService">
+        <wsdl:operation name="GetPensionInfo">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PensionInfoService/GetPensionInfo"
+                        name="XRoadRequestOf_PensionInfoRequest" message="tns:XRoadRequestOf_PensionInfoRequest"/>
+            <wsdl:output wsaw:Action="http://tunduk-sf.x-road.fi/producer/PensionInfoService/GetPensionInfoResponse"
+                         name="XRoadResponseOf_PensionInfo" message="tns:XRoadResponseOf_PensionInfo"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetPensionInfoWithSum">
+            <wsdl:input wsaw:Action="http://tunduk-sf.x-road.fi/producer/PensionInfoService/GetPensionInfoWithSum"
+                        name="XRoadRequestOf_PensionInfoWithSumRequest"
+                        message="tns:XRoadRequestOf_PensionInfoWithSumRequest"/>
+            <wsdl:output
+                wsaw:Action="http://tunduk-sf.x-road.fi/producer/PensionInfoService/GetPensionInfoWithSumResponse"
+                name="XRoadResponseOf_PensionInfoWithSum" message="tns:XRoadResponseOf_PensionInfoWithSum"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_PensionInfoService" type="tns:PensionInfoService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetPensionInfo">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PensionInfoService/GetPensionInfo"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_PensionInfoRequest">
+                <soap:header message="tns:XRoadRequestOf_PensionInfoRequest_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoRequest_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoRequest_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_PensionInfo">
+                <soap:header message="tns:XRoadResponseOf_PensionInfo_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfo_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfo_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfo_Headers" part="protocolVersion" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfo_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfo_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetPensionInfoWithSum">
+            <soap:operation soapAction="http://tunduk-sf.x-road.fi/producer/PensionInfoService/GetPensionInfoWithSum"
+                            style="document"/>
+            <wsdl:input name="XRoadRequestOf_PensionInfoWithSumRequest">
+                <soap:header message="tns:XRoadRequestOf_PensionInfoWithSumRequest_Headers" part="client"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoWithSumRequest_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoWithSumRequest_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoWithSumRequest_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoWithSumRequest_Headers" part="service"
+                             use="literal"/>
+                <soap:header message="tns:XRoadRequestOf_PensionInfoWithSumRequest_Headers" part="userId"
+                             use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="XRoadResponseOf_PensionInfoWithSum">
+                <soap:header message="tns:XRoadResponseOf_PensionInfoWithSum_Headers" part="client" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfoWithSum_Headers" part="id" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfoWithSum_Headers" part="issue" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfoWithSum_Headers" part="protocolVersion"
+                             use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfoWithSum_Headers" part="service" use="literal"/>
+                <soap:header message="tns:XRoadResponseOf_PensionInfoWithSum_Headers" part="userId" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PensionInfoService">
+        <wsdl:port name="BasicHttpBinding_PensionInfoService" binding="tns:BasicHttpBinding_PensionInfoService">
+            <soap:address location="http://example.org/xroad-endpoint"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

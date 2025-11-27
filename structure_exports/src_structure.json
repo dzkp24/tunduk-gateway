@@ -1,0 +1,185 @@
+{
+  "project_info": {
+    "name": "src",
+    "path": "/Users/max/projects/oracle/tunduk-gateway/src",
+    "generated_at": "2025-11-21T11:55:28.279309",
+    "total_files": 8,
+    "total_size": 11179
+  },
+  "structure": {
+    "UI": {
+      "Controller": {
+        "TransportController.php": {
+          "type": "file",
+          "info": {
+            "size": 1788,
+            "last_modified": "2025-11-21T11:55:28.260128",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        }
+      },
+      "EventListener": {
+        "ValidationExceptionListener.php": {
+          "type": "file",
+          "info": {
+            "size": 2115,
+            "last_modified": "2025-11-21T11:55:28.263541",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        }
+      }
+    },
+    "Application": {
+      "UseCase": {
+        "GetTransportInfoHandler.php": {
+          "type": "file",
+          "info": {
+            "size": 471,
+            "last_modified": "2025-11-21T11:55:28.267413",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        }
+      }
+    },
+    "Infrastructure": {
+      "Adapter": {
+        "InfocomSoapAdapter.php": {
+          "type": "file",
+          "info": {
+            "size": 4711,
+            "last_modified": "2025-11-21T11:55:28.269813",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        }
+      }
+    },
+    "Domain": {
+      "DTO": {
+        "TransportInfoRequest.php": {
+          "type": "file",
+          "info": {
+            "size": 1091,
+            "last_modified": "2025-11-21T11:55:28.272496",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        },
+        "TransportInfoResponse.php": {
+          "type": "file",
+          "info": {
+            "size": 542,
+            "last_modified": "2025-11-21T11:55:28.27435",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        }
+      },
+      "Contract": {
+        "InfocomGatewayInterface.php": {
+          "type": "file",
+          "info": {
+            "size": 260,
+            "last_modified": "2025-11-21T11:55:28.276249",
+            "mime_type": "text/x-php",
+            "extension": ".php"
+          }
+        }
+      }
+    },
+    "Kernel.php": {
+      "type": "file",
+      "info": {
+        "size": 201,
+        "last_modified": "2025-11-21T11:55:28.278047",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    }
+  },
+  "files": [
+    {
+      "path": "UI/Controller/TransportController.php",
+      "content": "<?php\n\nnamespace App\\UI\\Controller;\n\nuse App\\Application\\UseCase\\GetTransportInfoHandler;\nuse App\\Domain\\DTO\\TransportInfoRequest;\nuse Psr\\Log\\LoggerInterface;\nuse RuntimeException;\nuse Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController;\nuse Symfony\\Component\\HttpFoundation\\JsonResponse;\nuse Symfony\\Component\\HttpFoundation\\Response;\nuse Symfony\\Component\\HttpKernel\\Attribute\\MapRequestPayload;\nuse Symfony\\Component\\Routing\\Attribute\\Route;\nuse Exception;\n\n#[Route('/api/transport')]\nclass TransportController extends AbstractController\n{\n    public function __construct(\n        private readonly GetTransportInfoHandler $getTransportInfoHandler,\n        private readonly LoggerInterface $logger,\n    ) {}\n\n    #[Route('/info', methods: ['POST'])]\n    public function getInfo(#[MapRequestPayload] TransportInfoRequest $request): JsonResponse\n    {\n        try {\n            $result = $this->getTransportInfoHandler->handle($request);\n\n            return $this->json([\n                'success' => true,\n                'data' => $result,\n            ]);\n        }\n        catch (RuntimeException $e) {\n            $this->logger->warning('Gateway error: ' . $e->getMessage(), [\n                'trace' => $e->getTraceAsString()\n            ]);\n\n            return $this->json([\n                'success' => false,\n                'message' => $e->getMessage(),\n            ], Response::HTTP_BAD_GATEWAY);\n        }\n        catch (Exception $e) {\n            $this->logger->error('Internal error: ' . $e->getMessage(), [\n                'trace' => $e->getTraceAsString()\n            ]);\n\n            return $this->json([\n                'success' => false,\n                'message' => $e->getMessage(),\n            ], Response::HTTP_INTERNAL_SERVER_ERROR);\n        }\n    }\n}\n",
+      "info": {
+        "size": 1788,
+        "last_modified": "2025-11-21T11:55:28.260128",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "UI/EventListener/ValidationExceptionListener.php",
+      "content": "<?php\n\nnamespace App\\UI\\EventListener;\n\nuse Symfony\\Component\\EventDispatcher\\Attribute\\AsEventListener;\nuse Symfony\\Component\\HttpFoundation\\JsonResponse;\nuse Symfony\\Component\\HttpFoundation\\Response;\nuse Symfony\\Component\\HttpKernel\\Exception\\BadRequestHttpException;\nuse Symfony\\Component\\HttpKernel\\Exception\\UnprocessableEntityHttpException;\nuse Symfony\\Component\\Serializer\\NameConverter\\CamelCaseToSnakeCaseNameConverter;\nuse Symfony\\Component\\Validator\\Exception\\ValidationFailedException;\nuse Symfony\\Component\\HttpKernel\\Event\\ExceptionEvent;\nuse Symfony\\Component\\HttpKernel\\KernelEvents;\n\n#[AsEventListener(event: KernelEvents::EXCEPTION)]\nreadonly class ValidationExceptionListener\n{\n    public function __construct(\n        private CamelCaseToSnakeCaseNameConverter $converter,\n    ) {}\n\n    public function onKernelException(ExceptionEvent $event): void\n    {\n        $exception = $event->getThrowable();\n\n        if ($exception instanceof BadRequestHttpException) {\n            $event->setResponse(new JsonResponse([\n                'success' => false,\n                'status' => 400,\n                'message' => 'Invalid JSON format: ' . $exception->getMessage()\n            ], 400));\n            return;\n        }\n\n        if (!$exception instanceof UnprocessableEntityHttpException) {\n            return;\n        }\n\n        $previous = $exception->getPrevious();\n        if (!$previous instanceof ValidationFailedException) {\n            return;\n        }\n\n        $violations = $previous->getViolations();\n        $errors = [];\n\n        foreach ($violations as $violation) {\n            $propertyPath = $violation->getPropertyPath();\n\n            if ($propertyPath) {\n                $field = $this->converter->normalize($propertyPath);\n            } else {\n                $field = 'general';\n            }\n\n            $errors[$field] = $violation->getMessage();\n        }\n\n        $event->setResponse(new JsonResponse([\n            'success' => false,\n            'message' => 'Validation failed',\n            'errors' => $errors,\n        ], Response::HTTP_UNPROCESSABLE_ENTITY));\n    }\n}\n",
+      "info": {
+        "size": 2115,
+        "last_modified": "2025-11-21T11:55:28.263541",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "Application/UseCase/GetTransportInfoHandler.php",
+      "content": "<?php\n\nnamespace App\\Application\\UseCase;\n\nuse App\\Domain\\Contract\\InfocomGatewayInterface;\nuse App\\Domain\\DTO\\TransportInfoRequest;\nuse App\\Domain\\DTO\\TransportInfoResponse;\n\nreadonly class GetTransportInfoHandler\n{\n    public function __construct(\n        private InfocomGatewayInterface $gateway,\n    ) {}\n\n    public function handle(TransportInfoRequest $request): TransportInfoResponse\n    {\n        return $this->gateway->getTransportCurrentInfo($request);\n    }\n}\n",
+      "info": {
+        "size": 471,
+        "last_modified": "2025-11-21T11:55:28.267413",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "Infrastructure/Adapter/InfocomSoapAdapter.php",
+      "content": "<?php\n\nnamespace App\\Infrastructure\\Adapter;\n\nuse App\\Domain\\Contract\\InfocomGatewayInterface;\nuse App\\Domain\\DTO\\TransportInfoRequest;\nuse App\\Domain\\DTO\\TransportInfoResponse;\nuse Random\\RandomException;\nuse RuntimeException;\nuse SoapVar;\nuse Symfony\\Component\\DependencyInjection\\Attribute\\Autowire;\nuse stdClass;\nuse SoapClient;\nuse SoapHeader;\nuse SoapFault;\n\nreadonly class InfocomSoapAdapter implements InfocomGatewayInterface\n{\n    private SoapClient $soapClient;\n    private const XROAD_NS = 'http://x-road.eu/xsd/xroad.xsd';\n\n    /**\n     * @throws SoapFault\n     */\n    public function __construct(\n        #[Autowire(env: 'TUNDUK_WSDL')] private string $wsdl,\n        #[Autowire(env: 'TUNDUK_CLIENT_INSTANCE')] private string $clientInstance,\n        #[Autowire(env: 'TUNDUK_CLIENT_CLASS')] private string $clientClass,\n        #[Autowire(env: 'TUNDUK_CLIENT_CODE')] private string $clientCode,\n        #[Autowire(env: 'TUNDUK_CLIENT_SUBSYSTEM')] private string $clientSubsystem,\n\n        #[Autowire(env: 'TUNDUK_SERVICE_INSTANCE')] private string $serviceInstance,\n        #[Autowire(env: 'TUNDUK_SERVICE_CLASS')] private string $serviceClass,\n        #[Autowire(env: 'TUNDUK_SERVICE_CODE')] private string $serviceCode,\n        #[Autowire(env: 'TUNDUK_SERVICE_SUBSYSTEM')] private string $serviceSubsystem,\n        #[Autowire(env: 'TUNDUK_SERVICE_CODE_VERSION')] private string $serviceVersion,\n    ) {\n        $this->soapClient = new SoapClient($this->wsdl, [\n            'trace' => true,\n            'exceptions' => true,\n            'cache_wsdl' => WSDL_CACHE_NONE, // TODO: на проде включить\n            'soap_version' => SOAP_1_1,\n        ]);\n    }\n\n    /**\n     * @throws RandomException\n     */\n    public function getTransportCurrentInfo(TransportInfoRequest $request): TransportInfoResponse\n    {\n        $headers = $this->createXRoadHeaders('transportCurrentInfo');\n\n        $this->soapClient->__setSoapHeaders($headers);\n\n        try {\n            $response = $this->soapClient->transportCurrentInfo([\n                'request' => $this->getRequestBody($request),\n            ]);\n\n            $data = $response->response ?? null;\n\n            if (!$data) {\n                throw new RuntimeException('Empty response from SOAP');\n            }\n\n            $status = (int) ($data->status ?? 0);\n            $isFound = $status === 200;\n\n            return new TransportInfoResponse(\n                status: $status,\n                found: $isFound,\n                brand: $data->car?->brand ?? null,\n                model: $data->car?->model ?? null,\n                color: $data->car?->color ?? null,\n                year: isset($data->car->year) ? (int)$data->car->year : null,\n                vin: $data->car?->vin ?? null,\n                ownerName: $data->person?->name ?? null,\n                ownerSurname: $data->person?->surname ?? null\n            );\n        }\n        catch (SoapFault $e) {\n            throw new RuntimeException('Infocom SOAP Error: ' . $e->getMessage(), 0, $e);\n        }\n    }\n\n    /**\n     * @throws RandomException\n     */\n    private function createXRoadHeaders(string $serviceCode): array\n    {\n        $id = bin2hex(random_bytes(16));\n        $userId = 'system';\n\n        $h = fn($name, $data) => new SoapHeader(self::XROAD_NS, $name, $data);\n\n        $clientObj = new stdClass();\n        $clientObj->xRoadInstance = $this->clientInstance;\n        $clientObj->memberClass = $this->clientClass;\n        $clientObj->memberCode = $this->clientCode;\n        $clientObj->subsystemCode = $this->clientSubsystem;\n        $clientVar = new SoapVar($clientObj, SOAP_ENC_OBJECT, 'XRoadClientIdentifierType', self::XROAD_NS);\n\n        $serviceObj = new stdClass();\n        $serviceObj->xRoadInstance = $this->serviceInstance;\n        $serviceObj->memberClass = $this->serviceClass;\n        $serviceObj->memberCode = $this->serviceCode;\n        $serviceObj->subsystemCode = $this->serviceSubsystem;\n        $serviceObj->serviceCode = $serviceCode;\n        $serviceObj->serviceVersion = $this->serviceVersion;\n        $serviceVar = new SoapVar($serviceObj, SOAP_ENC_OBJECT, 'XRoadServiceIdentifierType', self::XROAD_NS);\n\n        return [\n            $h('client', $clientVar),\n            $h('service', $serviceVar),\n            $h('userId', $userId),\n            $h('id', $id),\n            $h('protocolVersion', '4.0'),\n        ];\n    }\n\n    private function getRequestBody(TransportInfoRequest $request): array\n    {\n        return array_filter([\n            'govPlate' => $request->govPlate,\n            'bodyNo' => $request->bodyNo,\n            'engineNo' => $request->engineNo,\n            'chassisNo' => $request->chassisNo,\n        ]);\n    }\n}\n",
+      "info": {
+        "size": 4711,
+        "last_modified": "2025-11-21T11:55:28.269813",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "Domain/DTO/TransportInfoRequest.php",
+      "content": "<?php\n\nnamespace App\\Domain\\DTO;\n\nuse Symfony\\Component\\Validator\\Constraints as Assert;\nuse Symfony\\Component\\Validator\\Context\\ExecutionContextInterface;\n\nreadonly class TransportInfoRequest\n{\n    public function __construct(\n        #[Assert\\Length(min: 4, max: 10)]\n        public ?string $govPlate = null,\n\n        #[Assert\\Length(min: 5, max: 30)]\n        public ?string $bodyNo   = null,\n\n        #[Assert\\Length(min: 5, max: 30)]\n        public ?string $engineNo = null,\n\n        #[Assert\\Length(min: 5, max: 30)]\n        public ?string $chassisNo = null,\n    ) {}\n\n    #[Assert\\Callback]\n    public function validateOneFieldIsPresent(ExecutionContextInterface $context): void\n    {\n        if (\n            empty($this->govPlate) &&\n            empty($this->bodyNo) &&\n            empty($this->engineNo) &&\n            empty($this->chassisNo)\n        ) {\n            $context->buildViolation('Необходимо указать хотя бы один параметр поиска (govPlate, bodyNo, engineNo или chassisNo)')\n                ->addViolation();\n        }\n    }\n}\n",
+      "info": {
+        "size": 1091,
+        "last_modified": "2025-11-21T11:55:28.272496",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "Domain/DTO/TransportInfoResponse.php",
+      "content": "<?php\n\nnamespace App\\Domain\\DTO;\n\nreadonly class TransportInfoResponse\n{\n    public function __construct(\n        public int     $status,\n        public bool    $found,\n\n        // Данные машины\n        public ?string $brand = null,\n        public ?string $model = null,\n        public ?string $color = null,\n        public ?int    $year  = null,\n        public ?string $vin   = null,\n\n        // Данные владельца\n        public ?string $ownerName    = null,\n        public ?string $ownerSurname = null,\n    ) {}\n}\n",
+      "info": {
+        "size": 542,
+        "last_modified": "2025-11-21T11:55:28.27435",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "Domain/Contract/InfocomGatewayInterface.php",
+      "content": "<?php\n\nnamespace App\\Domain\\Contract;\n\nuse App\\Domain\\DTO\\TransportInfoRequest;\nuse App\\Domain\\DTO\\TransportInfoResponse;\n\ninterface InfocomGatewayInterface\n{\n    public function getTransportCurrentInfo(TransportInfoRequest $request): TransportInfoResponse;\n}\n",
+      "info": {
+        "size": 260,
+        "last_modified": "2025-11-21T11:55:28.276249",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    },
+    {
+      "path": "Kernel.php",
+      "content": "<?php\n\nnamespace App;\n\nuse Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait;\nuse Symfony\\Component\\HttpKernel\\Kernel as BaseKernel;\n\nclass Kernel extends BaseKernel\n{\n    use MicroKernelTrait;\n}\n",
+      "info": {
+        "size": 201,
+        "last_modified": "2025-11-21T11:55:28.278047",
+        "mime_type": "text/x-php",
+        "extension": ".php"
+      }
+    }
+  ]
+}
