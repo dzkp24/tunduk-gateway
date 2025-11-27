@@ -16,8 +16,8 @@ use Throwable;
 class CarCheckController extends AbstractController
 {
     public function __construct(
-        private readonly CarCheckClient $client,
-        private readonly CarCheckPaidHandler     $paidHandler,
+        private readonly CarCheckClient      $client,
+        private readonly CarCheckPaidHandler $paidHandler,
     ) {}
 
     #[Route('/free', methods: ['POST'])]
@@ -37,8 +37,7 @@ class CarCheckController extends AbstractController
                 'success' => true,
                 'data' => $response,
             ]);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             return $this->json([
                 'success' => false,
                 'message' => $e->getMessage(),
