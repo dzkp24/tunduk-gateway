@@ -26,7 +26,7 @@ class XRoadSoapClient implements SoapClientInterface
         private readonly LoggerInterface    $logger,
     ) {
         $this->logger->debug('start');
-
+dd($wsdl, $this->location, $this->serviceSubSystem, $this->serviceCode, $this->memberCode, $this->serviceVersion);
         $this->client = new SoapClient($wsdl, [
             'location' => $this->location,
             'trace' => true,
