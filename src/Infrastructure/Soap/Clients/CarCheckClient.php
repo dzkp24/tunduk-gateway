@@ -49,7 +49,7 @@ readonly class CarCheckClient
      */
     public function carCheckFree(CarCheckRequest $request): CarCheckResponse
     {
-        $soapData = $this->client->call('carCheckByGovPlate', [
+        $soapData = $this->client->call('carCheckFree', [
             'govPlate' => $request->govPlate
         ]);
 
