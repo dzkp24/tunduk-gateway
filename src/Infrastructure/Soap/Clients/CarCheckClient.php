@@ -156,9 +156,10 @@ readonly class CarCheckClient
     public function generatePaymentCode(CarCheckRequest $request): ?string
     {
         $soapData = $this->client->call('carCheckGeneratePayment', [
-            'govPlate' => $request->govPlate
-        ],
-        );
+            'request' => [
+                'govPlate' => $request->govPlate,
+            ],
+        ]);
 
         $response = $soapData->response ?? null;
         $status = (int)($response->status ?? 500);
