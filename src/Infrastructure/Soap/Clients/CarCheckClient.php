@@ -25,7 +25,7 @@ readonly class CarCheckClient
         #[Autowire('%env(TUNDUK_LOCATION)%')] string          $location,
         #[Autowire('%env(CARCHECK_WSDL)%')] string            $wsdl,
         #[Autowire('%env(CARCHECK_SERVICE_CODE)%')] string    $serviceCode,
-        #[Autowire('%env(CARCHECK_SUBSYSTEM_CODE)%')] string  $serviceSubSystem,
+        #[Autowire('%env(CARCHECK_SUBSYSTEM_CODE)%')] string  $serviceSubsystem,
         #[Autowire('%env(CARCHECK_MEMBER_CODE)%')] string     $memberCode,
         #[Autowire('%env(CARCHECK_SERVICE_VERSION)%')] string $serviceVersion,
         XRoadHeaderFactory                                    $headers,
@@ -34,7 +34,7 @@ readonly class CarCheckClient
         $this->client = new XRoadSoapClient(
             $wsdl,
             $location,
-            $serviceSubSystem,
+            $serviceSubsystem,
             $serviceCode,
             $memberCode,
             $serviceVersion,
@@ -49,7 +49,7 @@ readonly class CarCheckClient
      */
     public function carCheckFree(CarCheckRequest $request): CarCheckResponse
     {
-        $soapData = $this->client->call('carCheckFree', [
+        $soapData = $this->client->call('carCheckByGovPlate', [
             'govPlate' => $request->govPlate
         ]);
 

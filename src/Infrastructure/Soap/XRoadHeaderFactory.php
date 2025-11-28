@@ -27,9 +27,9 @@ class XRoadHeaderFactory
         string $serviceSybSystem,
         string $serviceCode,
         string $memberCode,
+        string $serviceVersion = 'v1',
         string $instance = 'central-server',
         string $memberClass = 'GOV',
-        string $serviceVersion = 'v1'
     ): array {
         $clientXml = sprintf(
             '<xrd:client id:objectType="SUBSYSTEM" xmlns:xrd="%s" xmlns:id="%s">' .

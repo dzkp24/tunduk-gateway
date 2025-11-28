@@ -18,7 +18,7 @@ class XRoadSoapClient implements SoapClientInterface
     public function __construct(
         string                              $wsdl,
         private readonly string             $location,
-        private readonly string             $serviceSubSystem,
+        private readonly string             $serviceSubsystem,
         private readonly string             $serviceCode,
         private readonly string             $memberCode,
         private readonly string             $serviceVersion,
@@ -49,7 +49,7 @@ class XRoadSoapClient implements SoapClientInterface
 
         try {
             $headers = $this->headers->make(
-                $this->serviceSubSystem,
+                $this->serviceSubsystem,
                 $this->serviceCode,
                 $this->memberCode,
                 $this->serviceVersion,
