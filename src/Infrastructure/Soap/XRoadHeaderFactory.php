@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Ramsey\Uuid\Uuid;
 use SoapHeader;
 use SoapVar;
-use stdClass;
 
 class XRoadHeaderFactory
 {
@@ -21,7 +20,7 @@ class XRoadHeaderFactory
         private readonly string $memberCode,
 
         #[Autowire('%env(TUNDUK_CLIENT_SUBSYSTEM)%')]
-        private readonly string $subSystemCode,
+        private readonly string $subsystemCode,
     ) {}
 
     public function make(
@@ -32,43 +31,56 @@ class XRoadHeaderFactory
         string $memberClass = 'GOV',
         string $serviceVersion = 'v1'
     ): array {
-        $clientData = new stdClass();
-        $clientData->xRoadInstance = $instance;
-        $clientData->memberClass   = $this->memberClass;
-        $clientData->memberCode    = $this->memberCode;
-        $clientData->subsystemCode = $this->subSystemCode;
-        $clientData->objectType    = 'SUBSYSTEM';
-
-        $clientVar = new SoapVar(
-            $clientData,
-            SOAP_ENC_OBJECT,
-            'XRoadClientIdentifierType',
-            self::ID_NS
+        $clientXml = sprintf(
+            '<xrd:client id:objectType="SUBSYSTEM" xmlns:xrd="%s" xmlns:id="%s">' .
+            '<id:xRoadInstance>%s</id:xRoadInstance>' .
+            '<id:memberClass>%s</id:memberClass>' .
+            '<id:memberCode>%s</id:memberCode>' .
+            '<id:subsystemCode>%s</id:subsystemCode>' .
+            '</xrd:client>',
+            self::NS,
+            self::ID_NS,
+            $instance,
+            $this->memberClass,
+            $this->memberCode,
+            $this->subsystemCode
         );
 
-        $serviceData = new stdClass();
-        $serviceData->xRoadInstance = $instance;
-        $serviceData->memberClass   = $memberClass;
-        $serviceData->memberCode    = $memberCode;
-        $serviceData->subsystemCode = $serviceSybSystem;
-        $serviceData->serviceCode   = $serviceCode;
-        $serviceData->serviceVersion = $serviceVersion;
-        $serviceData->objectType    = 'SERVICE';
+        $clientVar = new SoapVar($clientXml, XSD_ANYXML);
 
-        $serviceVar = new SoapVar(
-            $serviceData,
-            SOAP_ENC_OBJECT,
-            'XRoadServiceIdentifierType',
-            self::ID_NS
+        $serviceVersionTag = '';
+        if (!empty($serviceVersion)) {
+            $serviceVersionTag = sprintf('<id:serviceVersion>%s</id:serviceVersion>', $serviceVersion);
+        }
+
+        $serviceXml = sprintf(
+            '<xrd:service id:objectType="SERVICE" xmlns:xrd="%s" xmlns:id="%s">' .
+            '<id:xRoadInstance>%s</id:xRoadInstance>' .
+            '<id:memberClass>%s</id:memberClass>' .
+            '<id:memberCode>%s</id:memberCode>' .
+            '<id:subsystemCode>%s</id:subsystemCode>' .
+            '<id:serviceCode>%s</id:serviceCode>' .
+            '%s' .
+            '</xrd:service>',
+            self::NS,
+            self::ID_NS,
+            $instance,
+            $memberClass,
+            $memberCode,
+            $serviceSybSystem,
+            $serviceCode,
+            $serviceVersionTag
         );
+
+        $serviceVar = new SoapVar($serviceXml, XSD_ANYXML);
 
         return [
             new SoapHeader(self::NS, 'client', $clientVar),
             new SoapHeader(self::NS, 'service', $serviceVar),
-            new SoapHeader(self::NS, 'id', Uuid::uuid4()->toString(), true),
-            new SoapHeader(self::NS, 'userId', 'DFA', true),
-            new SoapHeader(self::NS, 'issue', 'GatewayRequest', true),
-            new SoapHeader(self::NS, 'protocolVersion', '4.0', true),
+            new SoapHeader(self::NS, 'id', Uuid::uuid4()->toString()),
+            new SoapHeader(self::NS, 'userId', 'DFA'),
+            new SoapHeader(self::NS, 'issue', 'GatewayRequest'),
+            new SoapHeader(self::NS, 'protocolVersion', '4.0'),
         ];
     }
 }
