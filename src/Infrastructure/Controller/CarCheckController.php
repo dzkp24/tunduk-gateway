@@ -26,7 +26,7 @@ class CarCheckController extends AbstractController
         try {
             $response = $this->client->carCheckFree($request);
 
-            if ($response->isFound()) {
+            if (!$response->isFound()) {
                 return $this->json([
                     'success' => false,
                     'data' => null,
