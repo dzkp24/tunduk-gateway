@@ -17,6 +17,7 @@ use SoapFault;
 readonly class CarCheckClient
 {
     private XRoadSoapClient $client;
+    private LoggerInterface $logger;
 
     /**
      * @throws SoapFault
@@ -41,6 +42,8 @@ readonly class CarCheckClient
             $headers,
             $logger,
         );
+
+        $this->logger = $logger;
     }
 
     /**
@@ -54,9 +57,14 @@ readonly class CarCheckClient
         ]);
 
         $response = $soapData->response ?? null;
-        $status = (int)($response->status ?? 500);
+        $status = (int) ($response->status ?? 500);
 
         if ($status !== 200 || empty($response->car)) {
+            $this->logger->critical('CarCheck error: Invalid status or empty car data', [
+                'status' => $status,
+                'response_dump' => $response,
+            ]);
+
             return new CarCheckResponse(status: $status);
         }
 
