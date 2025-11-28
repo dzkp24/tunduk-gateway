@@ -55,7 +55,7 @@ class XRoadSoapClient implements SoapClientInterface
                 $this->serviceVersion,
             );
 
-            $this->client->__setSoapHeaders($headers);
+            $this->client->__setSoapHeaders([$headers]);
 
             return $this->client->__soapCall($method, !empty($params) ? $params : []);
         } catch (Exception $e) {
