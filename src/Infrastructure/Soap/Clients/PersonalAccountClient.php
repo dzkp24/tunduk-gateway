@@ -47,9 +47,11 @@ readonly class PersonalAccountClient
     public function GetWorkPeriodInfoWithSum(SocFundInfoRequest $request): WorkPeriodWithSumResponse
     {
         $soapData = $this->client->call('GetWorkPeriodInfoWithSum', [
-            'PIN' => $request->pin,
-            'RequestOrg' => $request->requestOrg,
-            'RequestPerson' => $request->requestPerson,
+            'request' => [
+                'PIN' => $request->pin,
+                'RequestOrg' => $request->requestOrg,
+                'RequestPerson' => $request->requestPerson,
+            ],
         ]);
 
         $response = $soapData->GetWorkPeriodInfoWithSumResponse ?? null;

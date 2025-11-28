@@ -47,9 +47,11 @@ readonly class PensionClient
     public function GetPensionInfoWithSum(SocFundInfoRequest $request): PensionInfoResponse
     {
         $soapData = $this->client->call('GetPensionInfo', [
-            'PIN' => $request->pin,
-            'RequestOrg' => $request->requestOrg,
-            'RequestPerson' => $request->requestPerson,
+            'request' => [
+                'PIN' => $request->pin,
+                'RequestOrg' => $request->requestOrg,
+                'RequestPerson' => $request->requestPerson,
+            ],
         ]);
 
         $response = $soapData->GetPensionInfoResponse ?? null;
