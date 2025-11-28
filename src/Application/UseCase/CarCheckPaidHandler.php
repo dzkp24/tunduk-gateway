@@ -5,11 +5,10 @@ namespace App\Application\UseCase;
 use App\Domain\DTO\CarCheck\Request\CarCheckRequest;
 use App\Domain\DTO\CarCheck\Response\CarCheckResponse;
 use App\Infrastructure\Soap\Clients\CarCheckClient;
-use DateMalformedStringException;
 use RuntimeException;
 use SoapFault;
 
-class CarCheckPaidHandler
+readonly class CarCheckPaidHandler
 {
     public function __construct(
         private CarCheckClient $client,
@@ -17,7 +16,6 @@ class CarCheckPaidHandler
 
     /**
      * @throws SoapFault
-     * @throws DateMalformedStringException
      */
     public function handle(CarCheckRequest $request): CarCheckResponse
     {
