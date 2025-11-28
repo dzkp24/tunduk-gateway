@@ -8,7 +8,7 @@ use SoapHeader;
 
 class XRoadHeaderFactory
 {
-    private const NS = 'https://x-road.eu/xsd/xroad.xsd';
+    private const NS = 'http://x-road.eu/xsd/xroad.xsd';
 
     public function __construct(
         #[Autowire('%env(TUNDUK_CLIENT_CLASS)%')]
@@ -27,7 +27,7 @@ class XRoadHeaderFactory
         string $memberCode,
         string $instance = 'central-server',
         string $memberClass = 'GOV',
-        string $serviceVersion = '4.0'): array
+        string $serviceVersion = 'v1'): array
     {
         return [
             new SoapHeader(self::NS, 'client', [
@@ -35,6 +35,7 @@ class XRoadHeaderFactory
                 'memberClass' => $this->memberClass,
                 'memberCode' => $this->memberCode,
                 'subsystemCode' => $this->subSystemCode,
+                'serviceVersion' => $serviceVersion,
             ]),
 
             new SoapHeader(self::NS, 'service', [
@@ -43,7 +44,6 @@ class XRoadHeaderFactory
                 'memberCode' => $memberCode,
                 'subsystemCode' => $serviceSybSystem,
                 'serviceCode' => $serviceCode,
-                'serviceVersion' => $serviceVersion,
             ]),
 
             new SoapHeader(self::NS, 'id', Uuid::uuid4()->toString(), true),
