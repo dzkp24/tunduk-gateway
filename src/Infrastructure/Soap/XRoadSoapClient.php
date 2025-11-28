@@ -60,7 +60,7 @@ class XRoadSoapClient implements SoapClientInterface
             $response = $this->client->__soapCall($method, [$params]);
 
             $this->logger->info(sprintf('Tunduk Response [%s]', $method), [
-                'params' => $params,
+                'params' => $response,
             ]);
 
             return $response;
