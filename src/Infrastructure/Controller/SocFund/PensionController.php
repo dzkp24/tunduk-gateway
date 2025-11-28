@@ -23,7 +23,7 @@ class PensionController extends AbstractController
         try {
             $response = $this->client->GetPensionInfoWithSum($request);
 
-            if ($response->isSuccess()) {
+            if (!$response->isSuccess()) {
                 return $this->json([
                     'success' => false,
                     'data' => null,

@@ -23,13 +23,6 @@ class PersonalAccountController extends AbstractController
         try {
             $response = $this->client->GetWorkPeriodInfoWithSum($request);
 
-            if (!$response->state) {
-                return $this->json([
-                    'success' => false,
-                    'data' => null,
-                ]);
-            }
-
             return $this->json([
                 'success' => true,
                 'data' => $response,
