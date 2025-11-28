@@ -110,7 +110,7 @@ readonly class CarCheckClient
     {
         $soapData = $this->client->call('carCheckPaid', [
             'request' => [
-                'paymentCode' => $paymentCode,
+                'paymentNumber' => $paymentCode,
             ],
         ]);
 
