@@ -55,9 +55,9 @@ class XRoadSoapClient implements SoapClientInterface
                 $this->serviceVersion,
             );
 
-            $this->client->__setSoapHeaders([$headers]);
+            $this->client->__setSoapHeaders($headers);
 
-            return $this->client->__soapCall($method, !empty($params) ? $params : []);
+            return $this->client->__soapCall($method, [$params]);
         } catch (Exception $e) {
             $this->logger->error(sprintf('Tunduk Error [%s]: %s', $method, $e->getMessage()), [
                 'trace' => $e->getTraceAsString(),
