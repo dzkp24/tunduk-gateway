@@ -30,14 +30,16 @@ class XRoadHeaderFactory
         string $serviceVersion = 'v1'): array
     {
         return [
-            new SoapHeader(self::NS, 'SUBSYSTEM', [
+            new SoapHeader(self::NS, 'client', [
+                'objectType' => 'SUBSYSTEM',
                 'xRoadInstance' => $instance,
                 'memberClass' => $this->memberClass,
                 'memberCode' => $this->memberCode,
                 'subsystemCode' => $this->subSystemCode,
             ]),
 
-            new SoapHeader(self::NS, 'SERVICE', [
+            new SoapHeader(self::NS, 'service', [
+                'objectType' => 'SERVICE',
                 'xRoadInstance' => $instance,
                 'memberClass' => $memberClass,
                 'memberCode' => $memberCode,
