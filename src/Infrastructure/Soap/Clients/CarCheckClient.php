@@ -109,7 +109,9 @@ readonly class CarCheckClient
     public function carCheckPaid(string $paymentCode): CarCheckResponse
     {
         $soapData = $this->client->call('carCheckPaid', [
-            'paymentNumber' => $paymentCode,
+            'request' => [
+                'paymentCode' => $paymentCode,
+            ],
         ]);
 
         $response = $soapData->response ?? null;

@@ -50,7 +50,7 @@ class XRoadSoapClient implements SoapClientInterface
         try {
             $headers = $this->headers->make(
                 $this->serviceSubsystem,
-                $this->serviceCode,
+                $method,
                 $this->memberCode,
                 $this->serviceVersion,
             );
